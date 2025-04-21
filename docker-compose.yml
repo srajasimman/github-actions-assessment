@@ -1,0 +1,13 @@
+name: github-actions-assessment
+
+services:
+  github-actions-assessment:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./template-repo:/home/candidate/assessment-repo
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
