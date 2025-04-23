@@ -1,4 +1,8 @@
-variable "REGISTRY_REPO" {
+variable "REGISTRY" {
+  default = "docker.io"
+}
+
+variable "USERNAME" {
   default = "srajasimman"
 }
 
@@ -9,5 +13,5 @@ group "default" {
 target "github-actions-assessment" {
   context = "./"
   dockerfile = "./Dockerfile"
-  tags = ["${REGISTRY_REPO}/github-actions-assessment:${VERSION}"]
+  tags = ["${REGISTRY}/${USERNAME}/github-actions-assessment:${VERSION}"]
 }
