@@ -6,6 +6,10 @@ variable "USERNAME" {
   default = "srajasimman"
 }
 
+variable "VERSION" {
+  default = "latest"
+}
+
 group "default" {
   targets = ["github-actions-assessment"]
 }
