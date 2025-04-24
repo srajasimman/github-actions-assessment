@@ -1,13 +1,33 @@
 name: github-actions-assessment
 
 services:
+  tsdproxy:
+    image: almeidapaulopt/tsdproxy:1
+    container_name: tsdproxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TS_AUTHKEY=${TS_AUTHKEY:-}
+    ports:
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./tsdproxy/data:/data
+      - ./tsdproxy/config:/config
+    restart: unless-stopped
+
   github-actions-assessment:
     build: .
     ports:
-      - "8080:8080"
+      - 8090:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./template-repo:/home/candidate/assessment-repo
     environment:
       - TZ=UTC
     restart: unless-stopped
+    labels:
+      tsdproxy.enable: true
+      tsdproxy.funnel: true
+      tsdproxy.name: gha-dev
+      tsdproxy.container_port: 8090

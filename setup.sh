@@ -43,20 +43,64 @@ When you're finished, please create a zip file of your solution.
 
 EOF
 
-echo "Do you want to create a sample app for the assessment? (y/n)"
+echo "Do you want to create a sample pipeline file for Harness? (y/n)"
 read -r REPLY
 if [ "$REPLY" == "n" ]; then
-  echo "Skipping sample app creation."
-  exit 0
+  echo "Skipping Harness sample pipeline creation."
 elif [ "$REPLY" == "y" ]; then
-  echo "Creating sample app..."
+  echo "Creating sample pipeline file for Harness..."
+
+  # Create a sample pipeline file for Harness
+  mkdir -p template-repo/harness-samples
+  cat >>template-repo/harness-samples/harness-pipeline-sample.yaml <<'EOF'
+pipeline:
+  name: Sample Pipeline
+  identifier: sample_pipeline
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        type: CI
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Build App
+                  identifier: build_app
+                  type: Run
+                  spec:
+                    command: mvn install
+    - stage:
+        name: Deploy
+        identifier: Deploy
+        type: CD
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Deploy App
+                  identifier: deploy_app
+                  type: ShellScript
+                  spec:
+                    shell: Bash
+                    script: echo "Deploying..."
+
+EOF
+
 else
   echo "Invalid input. Exiting."
   exit 1
 fi
 
-# Create sample app files
-cat >template-repo/package.json <<'EOF'
+echo "Do you want to create a sample app for the assessment? (y/n)"
+read -r REPLY
+if [ "$REPLY" == "n" ]; then
+  echo "Skipping sample app creation."
+elif [ "$REPLY" == "y" ]; then
+  echo "Creating sample app..."
+
+  # Create sample app files
+  cat >template-repo/package.json <<'EOF'
 {
   "name": "github-actions-assessment",
   "version": "1.0.0",
@@ -77,7 +121,7 @@ cat >template-repo/package.json <<'EOF'
 }
 EOF
 
-cat >template-repo/index.js <<'EOF'
+  cat >template-repo/index.js <<'EOF'
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -93,7 +137,7 @@ app.listen(port, () => {
 module.exports = app;
 EOF
 
-cat >template-repo/test.js <<'EOF'
+  cat >template-repo/test.js <<'EOF'
 const app = require('./index');
 
 test('App should be defined', () => {
@@ -101,8 +145,20 @@ test('App should be defined', () => {
 });
 EOF
 
-# Create a sample workflow file
-cat >template-repo/.github/workflows/sample-workflow.yml <<'EOF'
+else
+  echo "Invalid input. Exiting."
+  exit 1
+fi
+
+echo "Do you want to create a sample workflow and JavaScript action template? (y/n)"
+read -r REPLY
+if [ "$REPLY" == "n" ]; then
+  echo "Skipping sample workflow and JavaScript action creation."
+elif [ "$REPLY" == "y" ]; then
+  echo "Creating sample workflow and JavaScript action"
+
+  # Create a sample workflow file
+  cat >template-repo/.github/workflows/sample-workflow.yml <<'EOF'
 name: Sample Workflow
 
 on:
@@ -126,9 +182,9 @@ jobs:
         run: npm test
 EOF
 
-# Create a sample JavaScript action template
-mkdir -p template-repo/.github/actions/sample-action
-cat >template-repo/.github/actions/sample-action/action.yml <<'EOF'
+  # Create a sample JavaScript action template
+  mkdir -p template-repo/.github/actions/sample-action
+  cat >template-repo/.github/actions/sample-action/action.yml <<'EOF'
 name: 'Sample Action'
 description: 'A template for a JavaScript action'
 inputs:
@@ -144,7 +200,7 @@ runs:
   main: 'index.js'
 EOF
 
-cat >template-repo/.github/actions/sample-action/index.js <<'EOF'
+  cat >template-repo/.github/actions/sample-action/index.js <<'EOF'
 const core = require('@actions/core');
 const github = require('@actions/github');
 
@@ -165,7 +221,7 @@ try {
 }
 EOF
 
-cat >template-repo/.github/actions/sample-action/package.json <<'EOF'
+  cat >template-repo/.github/actions/sample-action/package.json <<'EOF'
 {
   "name": "sample-action",
   "version": "1.0.0",
@@ -178,4 +234,8 @@ cat >template-repo/.github/actions/sample-action/package.json <<'EOF'
 }
 EOF
 
+else
+  echo "Invalid input. Exiting."
+  exit 1
+fi
 echo "Template repository setup complete!"
