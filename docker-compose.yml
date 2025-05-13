@@ -18,6 +18,8 @@ services:
 
   github-actions-assessment:
     build: .
+    container_name: github-actions-assessment
+    image: srajasimman/github-actions-assessment:latest
     ports:
       - 8090:8080
     volumes:
