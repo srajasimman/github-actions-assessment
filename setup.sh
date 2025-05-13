@@ -22,6 +22,7 @@ EOF
 cat assessment-tasks.md >>template-repo/README.md
 
 cat >>template-repo/README.md <<'EOF'
+
 ## Testing Your Solutions
 
 You can test your workflows using the following commands:
